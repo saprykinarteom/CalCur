@@ -157,7 +157,9 @@ public class CalCur {
             }
         }
         else System.out.println("ERROR");
+        System.out.println(10);
     }
+
 }
 
 
