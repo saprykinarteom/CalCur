@@ -157,6 +157,44 @@ public class CalCur {
             }
         }
         else System.out.println("ERROR");
+        for(int i = 5; i < Operation.size(); i += 3){
+            switch (Operation.get(i)) {
+                case "plus":
+                    switch (Operation.get(i + 1)) {
+                        case "RUB":
+                            Intermed_Res = Intermed_Res.plus(new RUB(Double.parseDouble(Operation.get(i + 2))));
+                            break;
+                        case "Dollar":
+                            Intermed_Res = Intermed_Res.plus(new Dollar(Double.parseDouble(Operation.get(i + 2))));
+                            break;
+                        case "Euro":
+                            Intermed_Res = Intermed_Res.plus(new Euro(Double.parseDouble(Operation.get(i + 2))));
+                            break;
+                    }
+                    break;
+                case "minus":
+                    switch (Operation.get(i + 1)) {
+                        case "RUB":
+                            Intermed_Res = Intermed_Res.minus(new RUB(Double.parseDouble(Operation.get(i + 2))));
+                            break;
+                        case "Dollar":
+                            Intermed_Res = Intermed_Res.minus(new Dollar(Double.parseDouble(Operation.get(i + 2))));
+                            break;
+                        case "Euro":
+                            Intermed_Res = Intermed_Res.minus(new Euro(Double.parseDouble(Operation.get(i + 2))));
+                            break;
+                    }
+                    break;
+                case "multiply":
+                    Intermed_Res = Intermed_Res.multiply(Double.parseDouble(Operation.get(i + 2)));
+                    break;
+                case "division":
+                    Intermed_Res = Intermed_Res.division(Double.parseDouble(Operation.get(i + 2)));
+                    break;
+
+
+            }
+        }
     }
 }
 
