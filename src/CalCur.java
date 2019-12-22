@@ -12,11 +12,9 @@ public class CalCur {
         Operation.add("RUB");
         Operation.add("10");
         Operation.add("minus");
-        Operation.add("RUB");
+        Operation.add("Dollar");
         Operation.add("20");
-        System.out.println(Operation.size());
         Currency Intermed_Res = new Currency(0, 0);
-        if (Operation.get(0) != null && Operation.get(1) != null && Operation.get(2) != null && Operation.get(3) != null && Operation.get(4) != null) {
             switch (Operation.get(0)){
                 case "RUB":
                     switch (Operation.get(2)) {
@@ -24,15 +22,12 @@ public class CalCur {
                             switch (Operation.get(3)){
                                 case "RUB":
                                     Intermed_Res = new RUB(Double.parseDouble(Operation.get(1))).plus(new RUB(Double.parseDouble(Operation.get(4))));
-                                    System.out.println(Intermed_Res);
                                     break;
                                 case "Dollar":
                                     Intermed_Res = new RUB(Double.parseDouble(Operation.get(1))).plus(new Dollar(Double.parseDouble(Operation.get(4))));
-                                    System.out.println(Intermed_Res);
                                     break;
                                 case "Euro":
                                     Intermed_Res = new RUB(Double.parseDouble(Operation.get(1))).plus(new Euro(Double.parseDouble(Operation.get(4))));
-                                    System.out.println(Intermed_Res);
                                     break;
                             }
                             break;
@@ -41,26 +36,21 @@ public class CalCur {
                             switch (Operation.get(3)){
                                 case "RUB":
                                     Intermed_Res = new RUB(Double.parseDouble(Operation.get(1))).minus(new RUB(Double.parseDouble(Operation.get(4))));
-                                    System.out.println(Intermed_Res);
                                     break;
                                 case "Dollar":
                                     Intermed_Res = new RUB(Double.parseDouble(Operation.get(1))).minus(new Dollar(Double.parseDouble(Operation.get(4))));
-                                    System.out.println(Intermed_Res);
                                     break;
                                 case "Euro":
                                     Intermed_Res = new RUB(Double.parseDouble(Operation.get(1))).minus(new Euro(Double.parseDouble(Operation.get(4))));
-                                    System.out.println(Intermed_Res);
                                     break;
                             }
                             break;
 
                         case "multiply":
                             Intermed_Res = new RUB(Double.parseDouble(Operation.get(1))).multiply(Double.parseDouble(Operation.get(4)));
-                            System.out.println(Intermed_Res);
                             break;
                         case "division":
                             Intermed_Res = new RUB(Double.parseDouble(Operation.get(1))).division(Double.parseDouble(Operation.get(4)));
-                            System.out.println(Intermed_Res);
                             break;
                     }
 
@@ -72,15 +62,12 @@ public class CalCur {
                             switch (Operation.get(3)){
                                 case "RUB":
                                     Intermed_Res = new Dollar(Double.parseDouble(Operation.get(1))).plus(new RUB(Double.parseDouble(Operation.get(4))));
-                                    System.out.println(Intermed_Res);
                                     break;
                                 case "Dollar":
                                     Intermed_Res = new Dollar(Double.parseDouble(Operation.get(1))).plus(new Dollar(Double.parseDouble(Operation.get(4))));
-                                    System.out.println(Intermed_Res);
                                     break;
                                 case "Euro":
                                     Intermed_Res = new Dollar(Double.parseDouble(Operation.get(1))).plus(new Euro(Double.parseDouble(Operation.get(4))));
-                                    System.out.println(Intermed_Res);
                                     break;
                             }
                             break;
@@ -88,25 +75,20 @@ public class CalCur {
                             switch (Operation.get(3)){
                                 case "RUB":
                                     Intermed_Res = new Dollar(Double.parseDouble(Operation.get(1))).minus(new RUB(Double.parseDouble(Operation.get(4))));
-                                    System.out.println(Intermed_Res);
                                     break;
                                 case "Dollar":
                                     Intermed_Res = new Dollar(Double.parseDouble(Operation.get(1))).minus(new Dollar(Double.parseDouble(Operation.get(4))));
-                                    System.out.println(Intermed_Res);
                                     break;
                                 case "Euro":
                                     Intermed_Res = new Dollar(Double.parseDouble(Operation.get(1))).minus(new Euro(Double.parseDouble(Operation.get(4))));
-                                    System.out.println(Intermed_Res);
                                     break;
                             }
                             break;
                         case "multiply":
                             Intermed_Res = new Dollar(Double.parseDouble(Operation.get(1))).multiply(Double.parseDouble(Operation.get(4)));
-                            System.out.println(Intermed_Res);
                             break;
                         case "division":
                             Intermed_Res = new Dollar(Double.parseDouble(Operation.get(1))).division(Double.parseDouble(Operation.get(4)));
-                            System.out.println(Intermed_Res);
                             break;
                     }
                     break;
@@ -116,15 +98,12 @@ public class CalCur {
                             switch (Operation.get(3)){
                                 case "RUB":
                                     Intermed_Res = new Euro(Double.parseDouble(Operation.get(1))).plus(new RUB(Double.parseDouble(Operation.get(4))));
-                                    System.out.println(Intermed_Res);
                                     break;
                                 case "Dollar":
                                     Intermed_Res = new Euro(Double.parseDouble(Operation.get(1))).plus(new Dollar(Double.parseDouble(Operation.get(4))));
-                                    System.out.println(Intermed_Res);
                                     break;
                                 case "Euro":
                                     Intermed_Res = new Euro(Double.parseDouble(Operation.get(1))).plus(new Euro(Double.parseDouble(Operation.get(4))));
-                                    System.out.println(Intermed_Res);
                                     break;
                             }
                             break;
@@ -132,11 +111,9 @@ public class CalCur {
                             switch (Operation.get(3)){
                                 case "RUB":
                                     Intermed_Res = new Euro(Double.parseDouble(Operation.get(1))).minus(new RUB(Double.parseDouble(Operation.get(4))));
-                                    System.out.println(Intermed_Res);
                                     break;
                                 case "Dollar":
                                     Intermed_Res = new Euro(Double.parseDouble(Operation.get(1))).minus(new Dollar(Double.parseDouble(Operation.get(4))));
-                                    System.out.println(Intermed_Res);
                                     break;
                                 case "Euro":
                                     Intermed_Res = new Euro(Double.parseDouble(Operation.get(1))).minus(new Euro(Double.parseDouble(Operation.get(4))));
@@ -155,8 +132,6 @@ public class CalCur {
                     }
                     break;
             }
-        }
-        else System.out.println("ERROR");
         for(int i = 5; i < Operation.size(); i += 3){
             switch (Operation.get(i)) {
                 case "plus":
@@ -195,6 +170,7 @@ public class CalCur {
 
             }
         }
+        System.out.println(Intermed_Res.getNumber());
     }
 }
 
