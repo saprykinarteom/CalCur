@@ -6,21 +6,20 @@ public class CalCur {
     public static void main(String[] args) {
         System.out.println(new RUB(new Dollar(3).plus(new Dollar(1)).minus(new RUB(5))).getNumber());
         Calculation Operation = new Calculation();
-        Operation.add("RUB");
+        Operation.add("Euro");
         Operation.add("5");
         Operation.add("plus");
         Operation.add("RUB");
         Operation.add("10");
-        Operation.add("minus");
-        Operation.add("RUB");
-        Operation.add("20");
-        System.out.println(Operation.calculate().getNumber());
+        Operation.calculate();
+        System.out.println(Operation.get_result().getNumber());
     }
 }
 
 class Calculation
 {
     private ArrayList<String> _operation;
+    private Currency _result;
 
     public Calculation(){
         _operation = new ArrayList<String>();
@@ -28,162 +27,134 @@ class Calculation
     public void add(String a) {
         _operation.add(a);
     }
-    public Currency calculate() {
-        Currency Intermed_Res = new Currency(0, 0);
+    public Currency get_result() {
+        return _result;
+    }
+    public void calculate() {
+        Currency Intermed_Res = new Currency(0,0);
         switch (_operation.get(0)){
             case "RUB":
-                switch (_operation.get(2)) {
-                    case "plus":
-                        switch (_operation.get(3)){
-                            case "RUB":
-                                Intermed_Res = new RUB(Double.parseDouble(_operation.get(1))).plus(new RUB(Double.parseDouble(_operation.get(4))));
-                                break;
-                            case "Dollar":
-                                Intermed_Res = new RUB(Double.parseDouble(_operation.get(1))).plus(new Dollar(Double.parseDouble(_operation.get(4))));
-                                break;
-                            case "Euro":
-                                Intermed_Res = new RUB(Double.parseDouble(_operation.get(1))).plus(new Euro(Double.parseDouble(_operation.get(4))));
-                                break;
-                        }
-                        break;
-                    case "minus":
-
-                        switch (_operation.get(3)){
-                            case "RUB":
-                                Intermed_Res = new RUB(Double.parseDouble(_operation.get(1))).minus(new RUB(Double.parseDouble(_operation.get(4))));
-                                break;
-                            case "Dollar":
-                                Intermed_Res = new RUB(Double.parseDouble(_operation.get(1))).minus(new Dollar(Double.parseDouble(_operation.get(4))));
-                                break;
-                            case "Euro":
-                                Intermed_Res = new RUB(Double.parseDouble(_operation.get(1))).minus(new Euro(Double.parseDouble(_operation.get(4))));
-                                break;
-                        }
-                        break;
-
-                    case "multiply":
-                        Intermed_Res = new RUB(Double.parseDouble(_operation.get(1))).multiply(Double.parseDouble(_operation.get(4)));
-                        break;
-                    case "division":
-                        Intermed_Res = new RUB(Double.parseDouble(_operation.get(1))).division(Double.parseDouble(_operation.get(4)));
-                        break;
+                Intermed_Res = new RUB(Double.parseDouble(_operation.get(1)));
+                for(int i = 2; i < _operation.size(); i += 3) {
+                    switch (_operation.get(i)) {
+                        case "plus":
+                            switch (_operation.get(i + 1)) {
+                                case "RUB":
+                                    Intermed_Res = Intermed_Res.plus(new RUB(Double.parseDouble(_operation.get(i + 2))));
+                                    break;
+                                case "Dollar":
+                                    Intermed_Res = Intermed_Res.plus(new Dollar(Double.parseDouble(_operation.get(i + 2))));
+                                    break;
+                                case "Euro":
+                                    Intermed_Res = Intermed_Res.plus(new Euro(Double.parseDouble(_operation.get(i + 2))));
+                                    break;
+                            }
+                            break;
+                        case "minus":
+                            switch (_operation.get(i + 1)) {
+                                case "RUB":
+                                    Intermed_Res = Intermed_Res.minus(new RUB(Double.parseDouble(_operation.get(i + 2))));
+                                    break;
+                                case "Dollar":
+                                    Intermed_Res = Intermed_Res.minus(new Dollar(Double.parseDouble(_operation.get(i + 2))));
+                                    break;
+                                case "Euro":
+                                    Intermed_Res = Intermed_Res.minus(new Euro(Double.parseDouble(_operation.get(i + 2))));
+                                    break;
+                            }
+                            break;
+                        case "multiply":
+                            Intermed_Res = Intermed_Res.multiply(Double.parseDouble(_operation.get(i + 2)));
+                            break;
+                        case "division":
+                            Intermed_Res = Intermed_Res.division(Double.parseDouble(_operation.get(i + 2)));
+                            break;
+                    }
                 }
-
-
+                _result = Intermed_Res;
                 break;
+
             case "Dollar":
-                switch (_operation.get(2)) {
-                    case "plus":
-                        switch (_operation.get(3)){
-                            case "RUB":
-                                Intermed_Res = new Dollar(Double.parseDouble(_operation.get(1))).plus(new RUB(Double.parseDouble(_operation.get(4))));
-                                break;
-                            case "Dollar":
-                                Intermed_Res = new Dollar(Double.parseDouble(_operation.get(1))).plus(new Dollar(Double.parseDouble(_operation.get(4))));
-                                break;
-                            case "Euro":
-                                Intermed_Res = new Dollar(Double.parseDouble(_operation.get(1))).plus(new Euro(Double.parseDouble(_operation.get(4))));
-                                break;
-                        }
-                        break;
-                    case "minus":
-                        switch (_operation.get(3)){
-                            case "RUB":
-                                Intermed_Res = new Dollar(Double.parseDouble(_operation.get(1))).minus(new RUB(Double.parseDouble(_operation.get(4))));
-                                break;
-                            case "Dollar":
-                                Intermed_Res = new Dollar(Double.parseDouble(_operation.get(1))).minus(new Dollar(Double.parseDouble(_operation.get(4))));
-                                break;
-                            case "Euro":
-                                Intermed_Res = new Dollar(Double.parseDouble(_operation.get(1))).minus(new Euro(Double.parseDouble(_operation.get(4))));
-                                break;
-                        }
-                        break;
-                    case "multiply":
-                        Intermed_Res = new Dollar(Double.parseDouble(_operation.get(1))).multiply(Double.parseDouble(_operation.get(4)));
-                        break;
-                    case "division":
-                        Intermed_Res = new Dollar(Double.parseDouble(_operation.get(1))).division(Double.parseDouble(_operation.get(4)));
-                        break;
+                Intermed_Res = new Dollar(Double.parseDouble(_operation.get(1)));
+                for(int i = 2; i < _operation.size(); i += 3) {
+                    switch (_operation.get(i)) {
+                        case "plus":
+                            switch (_operation.get(i + 1)) {
+                                case "RUB":
+                                    Intermed_Res = Intermed_Res.plus(new RUB(Double.parseDouble(_operation.get(i + 2))));
+                                    break;
+                                case "Dollar":
+                                    Intermed_Res = Intermed_Res.plus(new Dollar(Double.parseDouble(_operation.get(i + 2))));
+                                    break;
+                                case "Euro":
+                                    Intermed_Res = Intermed_Res.plus(new Euro(Double.parseDouble(_operation.get(i + 2))));
+                                    break;
+                            }
+                            break;
+                        case "minus":
+                            switch (_operation.get(i + 1)) {
+                                case "RUB":
+                                    Intermed_Res = Intermed_Res.minus(new RUB(Double.parseDouble(_operation.get(i + 2))));
+                                    break;
+                                case "Dollar":
+                                    Intermed_Res = Intermed_Res.minus(new Dollar(Double.parseDouble(_operation.get(i + 2))));
+                                    break;
+                                case "Euro":
+                                    Intermed_Res = Intermed_Res.minus(new Euro(Double.parseDouble(_operation.get(i + 2))));
+                                    break;
+                            }
+                            break;
+                        case "multiply":
+                            Intermed_Res = Intermed_Res.multiply(Double.parseDouble(_operation.get(i + 2)));
+                            break;
+                        case "division":
+                            Intermed_Res = Intermed_Res.division(Double.parseDouble(_operation.get(i + 2)));
+                            break;
+                    }
                 }
+                _result = Intermed_Res;
                 break;
             case "Euro":
-                switch (_operation.get(2)) {
-                    case "plus":
-                        switch (_operation.get(3)){
-                            case "RUB":
-                                Intermed_Res = new Euro(Double.parseDouble(_operation.get(1))).plus(new RUB(Double.parseDouble(_operation.get(4))));
-                                break;
-                            case "Dollar":
-                                Intermed_Res = new Euro(Double.parseDouble(_operation.get(1))).plus(new Dollar(Double.parseDouble(_operation.get(4))));
-                                break;
-                            case "Euro":
-                                Intermed_Res = new Euro(Double.parseDouble(_operation.get(1))).plus(new Euro(Double.parseDouble(_operation.get(4))));
-                                break;
-                        }
-                        break;
-                    case "minus":
-                        switch (_operation.get(3)){
-                            case "RUB":
-                                Intermed_Res = new Euro(Double.parseDouble(_operation.get(1))).minus(new RUB(Double.parseDouble(_operation.get(4))));
-                                break;
-                            case "Dollar":
-                                Intermed_Res = new Euro(Double.parseDouble(_operation.get(1))).minus(new Dollar(Double.parseDouble(_operation.get(4))));
-                                break;
-                            case "Euro":
-                                Intermed_Res = new Euro(Double.parseDouble(_operation.get(1))).minus(new Euro(Double.parseDouble(_operation.get(4))));
-                                System.out.println(Intermed_Res);
-                                break;
-                        }
-                        break;
-                    case "multiply":
-                        Intermed_Res = new Euro(Double.parseDouble(_operation.get(1))).multiply(Double.parseDouble(_operation.get(4)));
-                        System.out.println(Intermed_Res);
-                        break;
-                    case "division":
-                        Intermed_Res = new Euro(Double.parseDouble(_operation.get(1))).division(Double.parseDouble(_operation.get(4)));
-                        System.out.println(Intermed_Res);
-                        break;
+                Intermed_Res = new Euro(Double.parseDouble(_operation.get(1)));
+                for(int i = 2; i < _operation.size(); i += 3) {
+                    switch (_operation.get(i)) {
+                        case "plus":
+                            switch (_operation.get(i + 1)) {
+                                case "RUB":
+                                    Intermed_Res = Intermed_Res.plus(new RUB(Double.parseDouble(_operation.get(i + 2))));
+                                    break;
+                                case "Dollar":
+                                    Intermed_Res = Intermed_Res.plus(new Dollar(Double.parseDouble(_operation.get(i + 2))));
+                                    break;
+                                case "Euro":
+                                    Intermed_Res = Intermed_Res.plus(new Euro(Double.parseDouble(_operation.get(i + 2))));
+                                    break;
+                            }
+                            break;
+                        case "minus":
+                            switch (_operation.get(i + 1)) {
+                                case "RUB":
+                                    Intermed_Res = Intermed_Res.minus(new RUB(Double.parseDouble(_operation.get(i + 2))));
+                                    break;
+                                case "Dollar":
+                                    Intermed_Res = Intermed_Res.minus(new Dollar(Double.parseDouble(_operation.get(i + 2))));
+                                    break;
+                                case "Euro":
+                                    Intermed_Res = Intermed_Res.minus(new Euro(Double.parseDouble(_operation.get(i + 2))));
+                                    break;
+                            }
+                            break;
+                        case "multiply":
+                            Intermed_Res = Intermed_Res.multiply(Double.parseDouble(_operation.get(i + 2)));
+                            break;
+                        case "division":
+                            Intermed_Res = Intermed_Res.division(Double.parseDouble(_operation.get(i + 2)));
+                            break;
+                    }
                 }
+                _result = Intermed_Res;
                 break;
         }
-        for(int i = 5; i < _operation.size(); i += 3){
-            switch (_operation.get(i)) {
-                case "plus":
-                    switch (_operation.get(i + 1)) {
-                        case "RUB":
-                            Intermed_Res = Intermed_Res.plus(new RUB(Double.parseDouble(_operation.get(i + 2))));
-                            break;
-                        case "Dollar":
-                            Intermed_Res = Intermed_Res.plus(new Dollar(Double.parseDouble(_operation.get(i + 2))));
-                            break;
-                        case "Euro":
-                            Intermed_Res = Intermed_Res.plus(new Euro(Double.parseDouble(_operation.get(i + 2))));
-                            break;
-                    }
-                    break;
-                case "minus":
-                    switch (_operation.get(i + 1)) {
-                        case "RUB":
-                            Intermed_Res = Intermed_Res.minus(new RUB(Double.parseDouble(_operation.get(i + 2))));
-                            break;
-                        case "Dollar":
-                            Intermed_Res = Intermed_Res.minus(new Dollar(Double.parseDouble(_operation.get(i + 2))));
-                            break;
-                        case "Euro":
-                            Intermed_Res = Intermed_Res.minus(new Euro(Double.parseDouble(_operation.get(i + 2))));
-                            break;
-                    }
-                    break;
-                case "multiply":
-                    Intermed_Res = Intermed_Res.multiply(Double.parseDouble(_operation.get(i + 2)));
-                    break;
-                case "division":
-                    Intermed_Res = Intermed_Res.division(Double.parseDouble(_operation.get(i + 2)));
-                    break;
-            }
-        }
-        return Intermed_Res;
     }
 }
 
