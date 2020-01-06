@@ -8,6 +8,21 @@ public class CalCur {
     }
 }
 
+class sum
+{
+    private Currency leftOperand;
+    private Currency rightOperand;
+
+    public sum(Currency lOp, Currency rOp) {
+        leftOperand = lOp;
+        rightOperand = rOp;
+    }
+    public Currency getResult() {
+        BigDecimal resNum = leftOperand.getNumber().add(rightOperand.getNumber().multiply(rightOperand.getRate())).divide(leftOperand.getRate());
+        Currency res = new Currency(resNum,leftOperand.getRate());
+        return res;
+    }
+}
 
 class  Currency
 {
@@ -24,6 +39,11 @@ class  Currency
     public Currency(BigDecimal n, double r){
         number = n;
         rate = BigDecimal.valueOf(r);
+    }
+
+    public Currency(BigDecimal n, BigDecimal r){
+        number = n;
+        rate = r;
     }
 
     public Currency(Currency c) {
@@ -90,7 +110,7 @@ class  Currency
 
 }
 
-class  Dollar extends Currency
+class Dollar extends Currency
 {
     Dollar(double n)
     {
