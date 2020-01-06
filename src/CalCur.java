@@ -8,23 +8,71 @@ public class CalCur {
     }
 }
 
-class sum
-{
-    private Currency leftOperand;
-    private Currency rightOperand;
+abstract class operation {
+    private BigDecimal leftOperand;
+    private BigDecimal rightOperand;
 
-    public sum(Currency lOp, Currency rOp) {
+    public operation(BigDecimal lOp, BigDecimal rOp) {
         leftOperand = lOp;
         rightOperand = rOp;
     }
-    public Currency getResult() {
-        BigDecimal resNum = leftOperand.getNumber().add(rightOperand.getNumber().multiply(rightOperand.getRate())).divide(leftOperand.getRate());
-        Currency res = new Currency(resNum,leftOperand.getRate());
-        return res;
+    public abstract BigDecimal getResult();
+    public BigDecimal getLeftOperand() {
+        return leftOperand;
+    }
+    public BigDecimal getRightOperand(){
+        return rightOperand;
     }
 }
 
-class  Currency
+class sum extends operation
+{
+    public sum(BigDecimal lOp, BigDecimal rOp) {
+        super(lOp, rOp);
+    }
+
+    public BigDecimal getResult() {
+
+        return super.getLeftOperand().add(super.getRightOperand());
+    }
+}
+class min extends operation
+{
+    public min(BigDecimal lOp, BigDecimal rOp) {
+        super(lOp, rOp);
+    }
+
+    public BigDecimal getResult() {
+
+        return super.getLeftOperand().subtract(super.getRightOperand());
+    }
+}
+
+class mul extends operation
+{
+    public mul(BigDecimal lOp, BigDecimal rOp) {
+        super(lOp, rOp);
+    }
+
+    public BigDecimal getResult() {
+
+        return super.getLeftOperand().multiply(super.getRightOperand());
+    }
+}
+
+class div extends operation
+{
+    public div(BigDecimal lOp, BigDecimal rOp) {
+        super(lOp, rOp);
+    }
+
+    public BigDecimal getResult() {
+
+        return super.getLeftOperand().divide(super.getRightOperand());
+    }
+}
+
+abstract class  Currency
 {
     private BigDecimal rate;
     private BigDecimal number;
