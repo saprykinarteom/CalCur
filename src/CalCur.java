@@ -1,74 +1,14 @@
 import java.math.BigDecimal;
+import java.math.MathContext;
+import java.math.RoundingMode;
 import java.util.ArrayList;
-
+import java.util.Map;
 
 public class CalCur {
     public static void main(String[] args) {
-        System.out.println(new RUB(10).plus(new Euro(20)).minus(new RUB(30)).equal());
-    }
-}
-
-abstract class operation {
-    private BigDecimal leftOperand;
-    private BigDecimal rightOperand;
-
-    public operation(BigDecimal lOp, BigDecimal rOp) {
-        leftOperand = lOp;
-        rightOperand = rOp;
-    }
-    public abstract BigDecimal getResult();
-    public BigDecimal getLeftOperand() {
-        return leftOperand;
-    }
-    public BigDecimal getRightOperand(){
-        return rightOperand;
-    }
-}
-
-class sum extends operation
-{
-    public sum(BigDecimal lOp, BigDecimal rOp) {
-        super(lOp, rOp);
-    }
-
-    public BigDecimal getResult() {
-
-        return super.getLeftOperand().add(super.getRightOperand());
-    }
-}
-class min extends operation
-{
-    public min(BigDecimal lOp, BigDecimal rOp) {
-        super(lOp, rOp);
-    }
-
-    public BigDecimal getResult() {
-
-        return super.getLeftOperand().subtract(super.getRightOperand());
-    }
-}
-
-class mul extends operation
-{
-    public mul(BigDecimal lOp, BigDecimal rOp) {
-        super(lOp, rOp);
-    }
-
-    public BigDecimal getResult() {
-
-        return super.getLeftOperand().multiply(super.getRightOperand());
-    }
-}
-
-class div extends operation
-{
-    public div(BigDecimal lOp, BigDecimal rOp) {
-        super(lOp, rOp);
-    }
-
-    public BigDecimal getResult() {
-
-        return super.getLeftOperand().divide(super.getRightOperand());
+        System.out.println(new Euro(1).plus(new Euro(11)).minus(new Dollar(5)).multiply(2).calculation().getNumberInEuro());
+        System.out.println(new Euro(1).plus(new Euro(11)).minus(new Dollar(5)).multiply(2).calculation().getNumberInRUB());
+        System.out.println(new Euro(1).plus(new Euro(11)).minus(new Dollar(5)).multiply(2).calculation().getNumberInDollar());
     }
 }
 
@@ -76,96 +16,151 @@ abstract class  Currency
 {
     private BigDecimal rate;
     private BigDecimal number;
-    private ArrayList<Currency> operation;
+    private ArrayList<Operation> operation;
+    static Map<String,BigDecimal> currencyRate = Map.of("RUB",BigDecimal.valueOf(0.016), "Euro", BigDecimal.valueOf(1.12), "Dollar",BigDecimal.valueOf(1));
 
-    public  Currency(double n, double r)
+    abstract class Operation
     {
-        number = BigDecimal.valueOf(n);
-        rate = BigDecimal.valueOf(r);
-        operation = new ArrayList<Currency>();
-    }
-    public Currency(BigDecimal n, double r){
-        number = n;
-        rate = BigDecimal.valueOf(r);
-    }
+        private BigDecimal rightOperand;
 
-    public Currency(BigDecimal n, BigDecimal r){
-        number = n;
-        rate = r;
-    }
+        public Operation(BigDecimal rOp) {
+            rightOperand = rOp;
+        }
+        public abstract BigDecimal getResult();
 
-    public Currency(Currency c) {
-        number = c.getNumber();
-        rate = c.getRate();
+        public BigDecimal getRightOperand(){
+            return rightOperand;
+        }
     }
-
-    private Currency _minus(Currency c)
+    class Sum extends Operation
     {
-        number = number.subtract(c.getNumber().multiply(c.getRate().divide(rate)));
-        return this;
+        public Sum(BigDecimal rOp) {
+            super(rOp);
+        }
+
+        public BigDecimal getResult() {
+            BigDecimal leftOperand = Currency.this.getNumberInDollar();
+            BigDecimal result = leftOperand.add(getRightOperand());
+            return result;
+        }
     }
+    class Min extends Operation
+    {
+        public Min(BigDecimal rOp) {
+            super(rOp);
+        }
+
+        public BigDecimal getResult() {
+            BigDecimal leftOperand = Currency.this.getNumberInDollar();
+            BigDecimal result = leftOperand.subtract(getRightOperand());
+            return result;
+        }
+    }
+    class Mul extends Operation
+    {
+        public Mul(BigDecimal rOp) {
+            super(rOp);
+        }
+        public BigDecimal getResult() {
+            BigDecimal leftOperand = Currency.this.getNumberInDollar();
+            BigDecimal result = leftOperand.multiply(getRightOperand());
+
+            return result;
+        }
+    }
+    class Div extends Operation
+    {
+        public Div(BigDecimal rOp) {
+            super(rOp);
+        }
+
+        public BigDecimal getResult() {
+            BigDecimal leftOperand = Currency.this.getNumberInDollar();
+            BigDecimal result = leftOperand.divide(getRightOperand(),DECIMAL128);
+
+            return result;
+        }
+    }
+
+    public Currency (){
+        operation = new ArrayList<Operation>();
+    };
     public Currency minus (Currency c){
-        operation.add(new Currency(this._minus(c)));
-        return this;
-    }
-    private Currency _plus(Currency c)
-    {
-        number = number.add(c.getNumber().multiply(c.getRate().divide(rate)));
+        BigDecimal rOp = c.getNumberInDollar();
+        operation.add(new Min(rOp));
         return this;
     }
     public Currency plus (Currency c) {
-        operation.add(new Currency(this._plus(c)));
-        return this;
-    }
-    private Currency _multiply(double n)
-    {
-        number = number.multiply(BigDecimal.valueOf(n));
+        BigDecimal rOp = c.getNumberInDollar();
+        operation.add(new Sum(rOp));
         return this;
     }
     public Currency multiply(double n){
-        operation.add(new Currency(this._multiply(n)));
+        BigDecimal rOp = BigDecimal.valueOf(n);
+        operation.add(new Mul(rOp));
         return this;
     }
-    private Currency _division(double n)
-    {
-            number =  number.divide(BigDecimal.valueOf(n));
-            return this;
-    }
-    public Currency division(double n){
-        operation.add(new Currency(this._division(n)));
+    public Currency division(double n) {
+        BigDecimal rOp = BigDecimal.valueOf(n);
+        operation.add(new Div(rOp));
         return this;
     }
-
-    public BigDecimal equal() {
-        return operation.get(operation.size()-1).getNumber();
-    }
-
     public BigDecimal getRate()
     {
         return rate;
     }
-    public void setRate(double newRate)
-    {
-        rate = BigDecimal.valueOf(newRate);
-    }
-    public BigDecimal getNumber() {
+    public BigDecimal getNumberInDollar() {
         return number;
+    }
+    public BigDecimal getNumberInEuro() {
+        return number.divide(currencyRate.get("Euro"),DECIMAL128);
+    }
+    public BigDecimal getNumberInRUB() {
+        return number.divide(currencyRate.get("RUB"),DECIMAL128);
     }
     public void setNumber(double newNumber)
     {
         number= BigDecimal.valueOf(newNumber);
     }
-
+    public void setNumber(BigDecimal newNumber)
+    {
+        number= newNumber;
+    }
+    public void setRate (BigDecimal newRate) {
+        rate = newRate;
+    }
+    public void setRate(double newRate)
+    {
+        rate = BigDecimal.valueOf(newRate);
+    }
+    public Currency calculation()
+    {
+        for (Currency.Operation result : operation) {
+            setNumber(result.getResult());
+        }
+        operation.clear();
+        return this;
+    }
+    public static final MathContext DECIMAL128 =
+            new MathContext(34, RoundingMode.HALF_EVEN);
 }
 
 class Dollar extends Currency
 {
     Dollar(double n)
     {
-        super(n, 1);
+        super();
+        BigDecimal num = BigDecimal.valueOf(n);
+        setNumber(num);
+        BigDecimal r = currencyRate.get("Dollar");
+        setRate(r);
     }
     Dollar(Currency n) {
-        super((n.getNumber().multiply(n.getRate()).divide(BigDecimal.valueOf(1))), 1);
+        super();
+        BigDecimal num = n.getNumberInDollar();
+        setNumber(num);
+        BigDecimal r = currencyRate.get("Dollar");
+        setRate(r);
     }
 }
 
@@ -173,10 +168,19 @@ class Euro extends Currency
 {
     Euro(double n)
     {
-        super(n, 1.12);
+        super();
+        BigDecimal num = BigDecimal.valueOf(n).multiply(currencyRate.get("Euro"));
+        setNumber(num);
+        BigDecimal r = currencyRate.get("Euro");
+        setRate(r);
     }
-    Euro(Currency n) {
-        super((n.getNumber().multiply(n.getRate()).divide(BigDecimal.valueOf(1.12))), 1.12);
+    Euro(Currency n)
+    {
+        super();
+        BigDecimal num = n.getNumberInDollar();
+        setNumber(num);
+        BigDecimal r = currencyRate.get("Euro");
+        setRate(r);
     }
 }
 
@@ -184,9 +188,17 @@ class RUB extends Currency
 {
     RUB(double n)
     {
-        super(n, 0.016);
+        super();
+        BigDecimal num = BigDecimal.valueOf(n).multiply(currencyRate.get("RUB"));
+        setNumber(num);
+        BigDecimal r = currencyRate.get("RUB");
+        setRate(r);
     }
     RUB(Currency n) {
-        super((n.getNumber().multiply(n.getRate()).divide(BigDecimal.valueOf(0.016))), 0.0160);
+        super();
+        BigDecimal num = n.getNumberInDollar();
+        setNumber(num);
+        BigDecimal r = currencyRate.get("RUB");
+        setRate(r);
     }
 }
