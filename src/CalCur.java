@@ -36,6 +36,7 @@ abstract class  Currency
 
 
 
+
     abstract class Operation
     {
         private BigDecimal rightOperand;
