@@ -1,4 +1,5 @@
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.math.MathContext;
 import java.math.RoundingMode;
 import java.util.ArrayList;
@@ -12,12 +13,28 @@ public class CalCur {
     }
 }
 
+enum currencyRate {
+    RUB(BigDecimal.valueOf(0.016)),
+    EURO(BigDecimal.valueOf(1.12)),
+    DOLLAR(BigDecimal.valueOf(1));
+
+    private BigDecimal value;
+    currencyRate(BigDecimal value){
+        this.value = value;
+    }
+    public BigDecimal getValue(){
+        return value;
+    }
+}
+
 abstract class  Currency
 {
     private BigDecimal rate;
     private BigDecimal number;
     private ArrayList<Operation> operation;
-    static Map<String,BigDecimal> currencyRate = Map.of("RUB",BigDecimal.valueOf(0.016), "Euro", BigDecimal.valueOf(1.12), "Dollar",BigDecimal.valueOf(1));
+
+
+
 
     abstract class Operation
     {
@@ -113,10 +130,10 @@ abstract class  Currency
         return number;
     }
     public BigDecimal getNumberInEuro() {
-        return number.divide(currencyRate.get("Euro"),DECIMAL128);
+        return number.divide(currencyRate.EURO.getValue(),DECIMAL128);
     }
     public BigDecimal getNumberInRUB() {
-        return number.divide(currencyRate.get("RUB"),DECIMAL128);
+        return number.divide(currencyRate.RUB.getValue(),DECIMAL128);
     }
     public void setNumber(double newNumber)
     {
@@ -152,14 +169,14 @@ class Dollar extends Currency
         super();
         BigDecimal num = BigDecimal.valueOf(n);
         setNumber(num);
-        BigDecimal r = currencyRate.get("Dollar");
+        BigDecimal r = currencyRate.DOLLAR.getValue();
         setRate(r);
     }
     Dollar(Currency n) {
         super();
         BigDecimal num = n.getNumberInDollar();
         setNumber(num);
-        BigDecimal r = currencyRate.get("Dollar");
+        BigDecimal r = currencyRate.DOLLAR.getValue();
         setRate(r);
     }
 }
@@ -169,9 +186,9 @@ class Euro extends Currency
     Euro(double n)
     {
         super();
-        BigDecimal num = BigDecimal.valueOf(n).multiply(currencyRate.get("Euro"));
+        BigDecimal num = BigDecimal.valueOf(n).multiply(currencyRate.EURO.getValue());
         setNumber(num);
-        BigDecimal r = currencyRate.get("Euro");
+        BigDecimal r = currencyRate.EURO.getValue();
         setRate(r);
     }
     Euro(Currency n)
@@ -179,7 +196,7 @@ class Euro extends Currency
         super();
         BigDecimal num = n.getNumberInDollar();
         setNumber(num);
-        BigDecimal r = currencyRate.get("Euro");
+        BigDecimal r = currencyRate.EURO.getValue();
         setRate(r);
     }
 }
@@ -189,16 +206,16 @@ class RUB extends Currency
     RUB(double n)
     {
         super();
-        BigDecimal num = BigDecimal.valueOf(n).multiply(currencyRate.get("RUB"));
+        BigDecimal num = BigDecimal.valueOf(n).multiply(currencyRate.RUB.getValue());
         setNumber(num);
-        BigDecimal r = currencyRate.get("RUB");
+        BigDecimal r = currencyRate.RUB.getValue();
         setRate(r);
     }
     RUB(Currency n) {
         super();
         BigDecimal num = n.getNumberInDollar();
         setNumber(num);
-        BigDecimal r = currencyRate.get("RUB");
+        BigDecimal r = currencyRate.RUB.getValue();
         setRate(r);
     }
 }
