@@ -1,16 +1,15 @@
 import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.math.MathContext;
 import java.math.RoundingMode;
 import java.util.ArrayList;
-import java.util.Map;
 
 public class CalCur {
     public static void main(String[] args) {
-        System.out.println(new Euro(1).plus(new Euro(11)).minus(new Dollar(5)).multiply(2).calculation().getNumberInEuro());
+        System.out.println(new Dollar(1).plus(new Euro(11)).minus(new Dollar(5)).multiply(2).calculation().getNumberInEuro());
         System.out.println(new Euro(1).plus(new Euro(11)).minus(new Dollar(5)).multiply(2).calculation().getNumberInRUB());
         System.out.println(new Euro(1).plus(new Euro(11)).minus(new Dollar(5)).multiply(2).calculation().getNumberInDollar());
     }
+
 }
 
 enum currencyRate {
@@ -32,10 +31,7 @@ abstract class  Currency
     private BigDecimal rate;
     private BigDecimal number;
     private ArrayList<Operation> operation;
-
-
-
-
+    static private String expression = "";
 
     abstract class Operation
     {
@@ -159,6 +155,13 @@ abstract class  Currency
         operation.clear();
         return this;
     }
+    public void addToExpression(String string) {
+        this.expression += string;
+    }
+    public String getExpression(){
+        return expression;
+    }
+
     public static final MathContext DECIMAL128 =
             new MathContext(34, RoundingMode.HALF_EVEN);
 }
@@ -172,7 +175,8 @@ class Dollar extends Currency
         setNumber(num);
         BigDecimal r = currencyRate.DOLLAR.getValue();
         setRate(r);
-    }
+        addToExpression(Double.toString(n) + ' ' + '$' + ' ');
+    }                          
     Dollar(Currency n) {
         super();
         BigDecimal num = n.getNumberInDollar();
