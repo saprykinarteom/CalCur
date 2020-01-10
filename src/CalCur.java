@@ -8,9 +8,7 @@ public class CalCur {
         System.out.println(new Dollar(1).minus(new Dollar(11)).calculation().resultInRUBToString());
 
     }
-
 }
-
 enum currencyRate {
     RUB(BigDecimal.valueOf(0.016)),
     EURO(BigDecimal.valueOf(1.12)),
@@ -51,8 +49,6 @@ abstract class  Currency
         public String getStrRightOperand() {
             return strRightOperand;
         }
-
-
         abstract public String toString();
 
     }
@@ -117,7 +113,6 @@ abstract class  Currency
             super(rOp);
             setStrRightOperand(rOp.toString());
         }
-
         public String toString() {
             String value = "";
             value += " / " + getStrRightOperand();
