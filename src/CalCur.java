@@ -5,9 +5,8 @@ import java.util.ArrayList;
 
 public class CalCur {
     public static void main(String[] args) {
-        System.out.println(new Dollar(1).plus(new Euro(11)).minus(new Dollar(5)).multiply(2).calculation().getNumberInEuro());
-        System.out.println(new Euro(1).plus(new Euro(11)).minus(new Dollar(5)).multiply(2).calculation().getNumberInRUB());
-        System.out.println(new Euro(1).plus(new Euro(11)).minus(new Dollar(5)).multiply(2).calculation().getNumberInDollar());
+        System.out.println(new Dollar(1).minus(new Dollar(11)).calculation().resultInRUBToString());
+
     }
 
 }
@@ -36,6 +35,7 @@ abstract class  Currency
     abstract class Operation
     {
         private BigDecimal rightOperand;
+        private String strRightOperand = "";
 
         public Operation(BigDecimal rOp) {
             rightOperand = rOp;
@@ -45,11 +45,22 @@ abstract class  Currency
         public BigDecimal getRightOperand(){
             return rightOperand;
         }
+        public void setStrRightOperand(String str){
+            strRightOperand += str;
+        }
+        public String getStrRightOperand() {
+            return strRightOperand;
+        }
+
+
+        abstract public String toString();
+
     }
     class Sum extends Operation
     {
-        public Sum(BigDecimal rOp) {
-            super(rOp);
+        public Sum(Currency rOp){
+            super(rOp.getNumberInDollar());
+            setStrRightOperand(rOp.toString());
         }
 
         public BigDecimal getResult() {
@@ -57,13 +68,24 @@ abstract class  Currency
             BigDecimal result = leftOperand.add(getRightOperand());
             return result;
         }
+        public String toString() {
+            String value = "";
+            value += " + " + getStrRightOperand();
+            return value;
+        }
     }
     class Min extends Operation
     {
-        public Min(BigDecimal rOp) {
-            super(rOp);
+        public Min(Currency rOp){
+            super(rOp.getNumberInDollar());
+            setStrRightOperand(rOp.toString());
         }
 
+        public String toString() {
+            String value = "";
+            value += " - " + getStrRightOperand();
+            return value;
+        }
         public BigDecimal getResult() {
             BigDecimal leftOperand = Currency.this.getNumberInDollar();
             BigDecimal result = leftOperand.subtract(getRightOperand());
@@ -74,6 +96,13 @@ abstract class  Currency
     {
         public Mul(BigDecimal rOp) {
             super(rOp);
+            setStrRightOperand(rOp.toString());
+        }
+
+        public String toString() {
+            String value = "";
+            value += " * " + getStrRightOperand();
+            return value;
         }
         public BigDecimal getResult() {
             BigDecimal leftOperand = Currency.this.getNumberInDollar();
@@ -86,12 +115,17 @@ abstract class  Currency
     {
         public Div(BigDecimal rOp) {
             super(rOp);
+            setStrRightOperand(rOp.toString());
         }
 
+        public String toString() {
+            String value = "";
+            value += " / " + getStrRightOperand();
+            return value;
+        }
         public BigDecimal getResult() {
             BigDecimal leftOperand = Currency.this.getNumberInDollar();
             BigDecimal result = leftOperand.divide(getRightOperand(),DECIMAL128);
-
             return result;
         }
     }
@@ -99,13 +133,11 @@ abstract class  Currency
     public Currency (){
         operation = new ArrayList<Operation>();
     };
-    public Currency minus (Currency c){
-        BigDecimal rOp = c.getNumberInDollar();
+    public Currency minus (Currency rOp){
         operation.add(new Min(rOp));
         return this;
     }
-    public Currency plus (Currency c) {
-        BigDecimal rOp = c.getNumberInDollar();
+    public Currency plus (Currency rOp) {
         operation.add(new Sum(rOp));
         return this;
     }
@@ -132,6 +164,18 @@ abstract class  Currency
     public BigDecimal getNumberInRUB() {
         return number.divide(currencyRate.RUB.getValue(),DECIMAL128);
     }
+    public String resultInDollarToString() {
+        addToExpression(getNumberInDollar().toString() + " $");
+        return getExpression();
+    }
+    public String resultInEuroToString() {
+        addToExpression(getNumberInEuro().toString() + " €");
+        return getExpression();
+    }
+    public String resultInRUBToString() {
+        addToExpression(getNumberInRUB().toString() + " ₽");
+        return getExpression();
+    }
     public void setNumber(double newNumber)
     {
         number= BigDecimal.valueOf(newNumber);
@@ -150,8 +194,11 @@ abstract class  Currency
     public Currency calculation()
     {
         for (Currency.Operation result : operation) {
+            addToExpression(this.toString());
             setNumber(result.getResult());
+            addToExpression(result.toString());
         }
+        addToExpression(" = ");
         operation.clear();
         return this;
     }
@@ -161,6 +208,7 @@ abstract class  Currency
     public String getExpression(){
         return expression;
     }
+    abstract public String toString();
 
     public static final MathContext DECIMAL128 =
             new MathContext(34, RoundingMode.HALF_EVEN);
@@ -175,34 +223,26 @@ class Dollar extends Currency
         setNumber(num);
         BigDecimal r = currencyRate.DOLLAR.getValue();
         setRate(r);
-        addToExpression(Double.toString(n) + ' ' + '$' + ' ');
-    }                          
-    Dollar(Currency n) {
-        super();
-        BigDecimal num = n.getNumberInDollar();
-        setNumber(num);
-        BigDecimal r = currencyRate.DOLLAR.getValue();
-        setRate(r);
+    }
+    public String toString() {
+        String string = "";
+        string += getNumberInDollar() + " $";
+        return string;
     }
 }
 
-class Euro extends Currency
-{
-    Euro(double n)
-    {
+class Euro extends Currency {
+    Euro(double n) {
         super();
         BigDecimal num = BigDecimal.valueOf(n).multiply(currencyRate.EURO.getValue());
         setNumber(num);
         BigDecimal r = currencyRate.EURO.getValue();
         setRate(r);
     }
-    Euro(Currency n)
-    {
-        super();
-        BigDecimal num = n.getNumberInDollar();
-        setNumber(num);
-        BigDecimal r = currencyRate.EURO.getValue();
-        setRate(r);
+    public String toString() {
+        String string = "";
+        string += getNumberInEuro() + " €";
+        return string;
     }
 }
 
@@ -216,11 +256,10 @@ class RUB extends Currency
         BigDecimal r = currencyRate.RUB.getValue();
         setRate(r);
     }
-    RUB(Currency n) {
-        super();
-        BigDecimal num = n.getNumberInDollar();
-        setNumber(num);
-        BigDecimal r = currencyRate.RUB.getValue();
-        setRate(r);
+    public String toString()
+    {
+        String string = "";
+        string += getNumberInRUB() + " ₽";
+        return string;
     }
 }
