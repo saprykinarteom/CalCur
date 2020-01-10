@@ -5,7 +5,7 @@ import java.util.ArrayList;
 
 public class CalCur {
     public static void main(String[] args) {
-        System.out.println(new Dollar(1).minus(new Dollar(11)).calculation().resultInRUBToString());
+        System.out.println(new Dollar(1).minus(new RUB(11)).calculation().resultInRUBToString());
 
     }
 }
@@ -160,15 +160,15 @@ abstract class  Currency
         return number.divide(currencyRate.RUB.getValue(),DECIMAL128);
     }
     public String resultInDollarToString() {
-        addToExpression(getNumberInDollar().toString() + " $");
+        addToExpression(" = " + getNumberInDollar().toString() + " $");
         return getExpression();
     }
     public String resultInEuroToString() {
-        addToExpression(getNumberInEuro().toString() + " €");
+        addToExpression( " = " + getNumberInEuro().toString() + " €");
         return getExpression();
     }
     public String resultInRUBToString() {
-        addToExpression(getNumberInRUB().toString() + " ₽");
+        addToExpression(" = " + getNumberInRUB().toString() + " ₽");
         return getExpression();
     }
     public void setNumber(double newNumber)
@@ -193,7 +193,6 @@ abstract class  Currency
             setNumber(result.getResult());
             addToExpression(result.toString());
         }
-        addToExpression(" = ");
         operation.clear();
         return this;
     }
