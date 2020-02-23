@@ -45,10 +45,10 @@ public abstract class  Currency
         return number;
     }
     public BigDecimal getNumberInEuro() {
-        return number.divide(CurrencyRate.EURO.getValue(),DECIMAL128);
+        return number.divide(CurrencyRate.euro.getValue(),DECIMAL128);
     }
-    public BigDecimal getNumberInRUB() {
-        return number.divide(CurrencyRate.Rub.getValue(),DECIMAL128);
+    public BigDecimal getNumberInRub() {
+        return number.divide(CurrencyRate.rub.getValue(),DECIMAL128);
     }
     public String resultInDollarToString() {
         addToExpression(" = " + getNumberInDollar().toString() + " $");
@@ -58,8 +58,8 @@ public abstract class  Currency
         addToExpression( " = " + getNumberInEuro().toString() + " €");
         return getExpression();
     }
-    public String resultInRUBToString() {
-        addToExpression(" = " + getNumberInRUB().toString() + " ₽");
+    public String resultInRubToString() {
+        addToExpression(" = " + getNumberInRub().toString() + " ₽");
         return getExpression();
     }
     public void setNumber(double newNumber)
@@ -79,11 +79,12 @@ public abstract class  Currency
     }
     public Currency calculation()
     {
+        addToExpression(this.toString());
         for (Operation result : operation) {
-            addToExpression(this.toString());
             setNumber(result.getResult(this.getNumberInDollar()));
             addToExpression(result.toString());
         }
+
         operation.clear();
         return this;
     }

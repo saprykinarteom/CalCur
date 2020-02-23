@@ -7,15 +7,14 @@ import java.math.BigDecimal;
 public class Rub extends Currency {
     public Rub(double n) {
         super();
-        BigDecimal num = BigDecimal.valueOf(n).multiply(CurrencyRate.Rub.getValue());
+        BigDecimal num = BigDecimal.valueOf(n).multiply(CurrencyRate.rub.getValue());
         setNumber(num);
-        BigDecimal r = CurrencyRate.Rub.getValue();
+        BigDecimal r = CurrencyRate.rub.getValue();
         setRate(r);
         }
-    public String toString()
-        {
+    public String toString() {
         String string = "";
-        string += getNumberInRUB() + " ₽";
+        string += getNumberInRub() + " ₽";
         return string;
         }
-        }
+}

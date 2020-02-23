@@ -11,7 +11,7 @@ public class Dollar extends Currency
         super();
         BigDecimal num = BigDecimal.valueOf(n);
         setNumber(num);
-        BigDecimal r = CurrencyRate.DOLLAR.getValue();
+        BigDecimal r = CurrencyRate.dollar.getValue();
         setRate(r);
     }
     public String toString() {
