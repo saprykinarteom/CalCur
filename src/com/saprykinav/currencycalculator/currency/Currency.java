@@ -7,12 +7,13 @@ import java.math.BigDecimal;
 import java.math.MathContext;
 import java.math.RoundingMode;
 import java.util.ArrayList;
+import java.util.List;
 
 public abstract class  Currency
 {
     private BigDecimal rate;
     private BigDecimal number;
-    private ArrayList<Operation> operation;
+    private List<Operation> operation;
     static private String expression = "";
 
 
@@ -94,7 +95,7 @@ public abstract class  Currency
     public String getExpression(){
         return expression;
     }
-    abstract public String toString();
+    public abstract String toString();
 
     public static final MathContext DECIMAL128 =
             new MathContext(34, RoundingMode.HALF_EVEN);

@@ -22,5 +22,5 @@ public abstract class Operation
     public String getStrRightOperand() {
         return strRightOperand;
     }
-    abstract public String toString();
+    public abstract String toString();
 }
